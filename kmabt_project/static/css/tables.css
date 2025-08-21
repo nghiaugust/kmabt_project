@@ -1,0 +1,105 @@
+/* Tables styles - Recent Transactions và các bảng khác */
+
+/* Recent Transactions Table Layout */
+#transactions table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Column widths */
+#transactions th:nth-child(1),
+#transactions td:nth-child(1) { width: 25%; } /* TX Hash */
+#transactions th:nth-child(2),
+#transactions td:nth-child(2) { width: 25%; } /* Amount */
+#transactions th:nth-child(3),
+#transactions td:nth-child(3) { width: 20%; } /* USD */
+#transactions th:nth-child(4),
+#transactions td:nth-child(4) { width: 30%; } /* Fee */
+
+/* Text overflow handling */
+#transactions td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 6px 8px;
+}
+
+/* Main transaction table styling */
+#tx-container table {
+  width: 100%;
+  border-collapse: collapse !important;
+  background: rgba(26, 26, 46, 0.3) !important;
+  border: none !important;
+  color: #e0e0e0 !important;
+  font-family: "Press Start 2P", monospace;
+}
+#tx-container thead tr {
+  color: #fff !important;
+  font-weight: bold;
+  border: none !important;
+}
+#tx-container tbody tr {
+  color: #e0e0e0 !important;
+}
+#tx-container tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+#tx-container td,
+#tx-container th {
+  border: none !important;
+  padding: 6px 10px;
+}
+#tx-container a {
+  color: #a7bce8 !important;
+  text-decoration: none;
+}
+#tx-container a:hover {
+  color: #fff !important;
+  text-decoration: underline;
+}
+
+/* Transaction details table in overlay */
+.table-wrapper {
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 16px;
+}
+
+.tx-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85em;
+  color: #eee;
+}
+
+.tx-table th, .tx-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #333;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.tx-table th {
+  color: #42a5f5;
+  font-weight: bold;
+}
+
+/* Address cell styling */
+.addr-cell {
+  max-width: 420px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fbc02d;
+  font-weight: 500;
+  transition: color 0.2s ease, background 0.2s ease;
+  cursor: pointer;
+}
+
+.addr-cell:hover {
+  white-space: normal;
+  word-break: break-all;
+  color: #fff176;
+  background: rgba(251, 192, 45, 0.15);
+}

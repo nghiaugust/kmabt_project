@@ -1,0 +1,124 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container" style="margin-top: 120px; padding-bottom: 50px">
+  <h2 class="mb-4">Report Suspicious Address/Transaction</h2>
+  <form id="reportForm" method="post" action="/submit-report/">
+    <div class="form-group mb-4">
+      <label for="target_type" class="form-label mb-2">Target Type</label>
+      <select
+        class="form-control form-select"
+        id="target_type"
+        name="target_type"
+        required
+        style="padding: 12px"
+      >
+        <option value="address">Bitcoin Address</option>
+        <option value="transaction">Bitcoin Transaction</option>
+      </select>
+    </div>
+    <div class="form-group mb-4">
+      <label for="target_value" class="form-label mb-2">Address or TXID</label>
+      <input
+        type="text"
+        class="form-control"
+        id="target_value"
+        name="target_value"
+        placeholder="Enter address or TXID"
+        required
+        style="padding: 12px"
+      />
+    </div>
+    <div class="form-group mb-4">
+      <label for="report_type" class="form-label mb-2">Report Type</label>
+      <select
+        class="form-control form-select"
+        id="report_type"
+        name="report_type"
+        required
+        style="padding: 12px"
+      >
+        <option value="">Select report type...</option>
+        <option value="scam">Scam</option>
+        <option value="fraud">Fraud</option>
+        <option value="money_laundering">Money Laundering</option>
+        <option value="ransomware">Ransomware</option>
+        <option value="ponzi_scheme">Ponzi Scheme</option>
+        <option value="phishing">Phishing</option>
+        <option value="darknet_market">Darknet Market</option>
+        <option value="exchange_hack">Exchange Hack</option>
+        <option value="terrorism_financing">Terrorism Financing</option>
+        <option value="child_abuse">Child Abuse Material</option>
+        <option value="drug_trafficking">Drug Trafficking</option>
+        <option value="stolen_funds">Stolen Funds</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="form-group mb-4">
+      <label for="description" class="form-label mb-2"
+        >Detailed Description</label
+      >
+      <textarea
+        class="form-control"
+        id="description"
+        name="description"
+        rows="5"
+        placeholder="Add more details (optional)"
+        style="padding: 12px"
+      ></textarea>
+    </div>
+    <div class="form-group mb-4">
+      <label for="reporter_email" class="form-label mb-2"
+        >Reporter Email (optional)</label
+      >
+      <input
+        type="email"
+        class="form-control"
+        id="reporter_email"
+        name="reporter_email"
+        placeholder="Your email"
+        style="padding: 12px"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Report</button>
+  </form>
+  <div id="reportResult" class="mt-4"></div>
+</div>
+<script>
+  // Submit form via AJAX to avoid page reload
+  const form = document.getElementById("reportForm");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const data = {
+      target_type: form.target_type.value,
+      target_value: form.target_value.value,
+      report_type: form.report_type.value,
+      description: form.description.value,
+      reporter_email: form.reporter_email.value,
+    };
+    fetch("/submit-report/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        const div = document.getElementById("reportResult");
+        if (result.success) {
+          div.innerHTML =
+            '<div class="alert alert-success">Report submitted successfully!</div>';
+          form.reset();
+        } else {
+          div.innerHTML = `<div class="alert alert-danger">${
+            result.error || "An error occurred."
+          }</div>`;
+        }
+      })
+      .catch(() => {
+        document.getElementById("reportResult").innerHTML =
+          '<div class="alert alert-danger">An error occurred while submitting the report.</div>';
+      });
+  });
+</script>
+{% endblock %}

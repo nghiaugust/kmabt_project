@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Truy vết - KMABT{% endblock %}
+
+{% block content %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/graph.css' %}">
+{% endblock %}
+
+<div id="graph-panel">
+    <div class="container-fluid">
+        <!-- Controls Panel -->
+        <div class="graph-controls">
+            <h3>Blockchain Transaction Analysis</h3>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Enter a real Bitcoin address (e.g., 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa)...">
+                <button class="btn-analyze" onclick="searchRealBitcoin()">Search</button>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-sm" style="background: rgba(66,165,245,0.2); border: 1px solid #42a5f5; color: #42a5f5;" onclick="loadSampleData()">Load Sample</button>
+                <button class="btn btn-sm" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff;" onclick="clearGraph()">Clear</button>
+                <button class="btn btn-sm" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff;" onclick="fitGraph()">Fit View</button>
+                <button class="btn btn-sm" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff;" onclick="zoomIn()">Zoom In</button>
+                <button class="btn btn-sm" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff;" onclick="zoomOut()">Zoom Out</button>
+                <button class="btn btn-sm" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff;" onclick="centerGraph()">Center</button>
+                <button class="btn btn-sm" style="background: rgba(46,204,113,0.15); border: 1px solid #2ecc71; color: #2ecc71;" onclick="focusImportant()">Focus Important</button>
+                <button class="btn btn-sm" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #fff;" onclick="resetFocus()">Reset Focus</button>
+            </div>
+        </div>
+
+        <!-- Stats Panel -->
+        <div class="graph-stats">
+            <div class="stat-item">
+                <span class="stat-value" id="nodeCount">0</span>
+                <div class="stat-label">Nodes</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="edgeCount">0</span>
+                <div class="stat-label">Transactions</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="totalValue">$0</span>
+                <div class="stat-label">Total Value</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="exchangeCount">0</span>
+                <div class="stat-label">Exchanges</div>
+            </div>
+        </div>
+
+        <!-- Graph Container -->
+        <div class="graph-container">
+            <div id="cy" style="width: 100%; height: 900px;"></div>
+            
+            <!-- Loading Overlay -->
+            <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+                <div>Expanding node...</div>
+            </div>
+        </div>
+        
+        <!-- Context Menu -->
+        <div id="contextMenu" class="context-menu">
+            <div class="context-menu-item" onclick="expandNode()">Expand this node</div>
+            <div class="context-menu-item" onclick="copyAddress()">Copy address</div>
+            <div class="context-menu-item" onclick="viewOnExplorer()">View on explorer</div>
+            <div class="context-menu-item" onclick="highlightConnections()">Highlight connections</div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="graph-info">
+            <div id="nodeInfo">
+                <strong>Transaction Graph Analysis</strong><br>
+                <span style="opacity: 0.7;">Click on nodes or edges to view details. Use mouse wheel to zoom, drag to pan.</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+<script src="{% static 'js/graph.js' %}"></script>
+{% endblock %}

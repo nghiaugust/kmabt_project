@@ -1,0 +1,80 @@
+/* Layout styles - Grid systems và layout chính */
+
+/* Main Header Section */
+.main-header {
+  min-height: 140vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 36px;
+  position: relative;
+  padding-bottom: 40px;
+}
+
+.header-grid {
+  display: grid;
+  grid-template-columns: 2.5fr 1.5fr;
+  gap: 26px;
+  max-width: 1600px;
+  width: 100%;
+}
+
+/* Content Grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr;
+  gap: 26px;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 36px;
+  padding-top: 40px
+}
+
+/* Box layouts */
+.box {
+  height: 100%;
+}
+
+.box--topleft {
+  min-height: 240px;
+}
+.box--bottomleft {
+  min-height: 560px;
+}
+.box--bottomright {
+  min-height: 560px;
+}
+
+/* Fixed sizes */
+#transactions {
+  min-height: 500px;
+}
+
+#chatbot {
+  min-height: 400px;
+  min-width: 350px;
+}
+
+/* Responsive Layout */
+@media (max-width: 992px) {
+  .header-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, auto);
+  }
+  .content-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, auto);
+  }
+  .box--bottomleft,
+  .box--bottomright {
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}

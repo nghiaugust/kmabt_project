@@ -1,0 +1,117 @@
+/* Animations - Tất cả animations, transitions và effects */
+
+/* Fade-in Animation */
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Loading Dots Animation */
+@keyframes loadingDots {
+  0%,
+  20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60%,
+  100% {
+    content: "...";
+  }
+}
+
+/* Bounce Animation for Scroll Indicator */
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  40% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  0% { 
+    transform: rotate(0deg); 
+  }
+  100% { 
+    transform: rotate(360deg); 
+  }
+}
+
+/* Card Hover Transitions */
+.card-soft {
+  transition: all 0.25s ease;
+}
+
+.grid .card-soft {
+  transition: all 0.25s ease;
+}
+
+/* Button Transitions */
+.pill {
+  transition: background-color 0.2s ease;
+}
+
+.enter-btn {
+  transition: background-color 0.2s ease;
+}
+
+.close-btn {
+  transition: background 0.2s;
+}
+
+/* Scroll Indicator Transitions */
+.scroll-indicator {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Address Cell Transitions */
+.addr-cell {
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+/* Analytics Content Transitions */
+.analytics-content-inline {
+  transition: opacity 0.3s ease;
+}
+
+/* Header Transitions */
+.site-header {
+  transition: all 0.3s ease;
+}
+
+/* Analysis Loading Spinner */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Analysis Section Animation */
+.analysis-section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

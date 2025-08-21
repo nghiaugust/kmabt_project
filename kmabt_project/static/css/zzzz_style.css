@@ -1,0 +1,625 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+html {
+  background: #0a0a0a;
+}
+body {
+  background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+    linear-gradient(
+      90deg,
+      #0e1a2b 0%,
+      #183b5c 25%,
+      #1f5c85 50%,
+      #183b5c 75%,
+      #0e1a2b 100%
+    );
+  min-height: fit-content;
+  padding-top: 0;
+  font-family: "Press Start 2P", monospace;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+  color: #e0e0e0;
+  zoom: 70%;
+}
+
+/* Main Header Section */
+.main-header {
+  min-height: 140vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 36px;
+  position: relative;
+}
+
+.header-grid {
+  display: grid;
+  grid-template-columns: 2.5fr 1.5fr;
+  gap: 26px;
+  max-width: 1600px;
+  width: 100%;
+}
+
+/* Content Grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr;
+  gap: 26px;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 36px;
+}
+
+
+/* Cố định bảng Recent Transactions */
+#transactions {
+  min-height: 500px;
+}
+
+/* Cố định layout bảng */
+#transactions table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Định nghĩa chiều rộng cột */
+#transactions th:nth-child(1),
+#transactions td:nth-child(1) { width: 25%; } /* TX Hash */
+#transactions th:nth-child(2),
+#transactions td:nth-child(2) { width: 25%; } /* Amount */
+#transactions th:nth-child(3),
+#transactions td:nth-child(3) { width: 20%; } /* USD */
+#transactions th:nth-child(4),
+#transactions td:nth-child(4) { width: 30%; } /* Fee */
+
+/* Ngăn text tràn */
+#transactions td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 6px 8px;
+}
+
+/* Làm AI Chatbot to hơn */
+#chatbot {
+  min-height: 400px;
+  min-width: 350px; /* Đảm bảo chiều rộng tối thiểu */
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-columns: 1fr; /* Stack thành 1 cột */
+    gap: 15px;
+  }
+}
+
+.grid .card-soft {
+  transition: all 0.25s ease;
+  opacity: 1;
+}
+.grid:hover .card-soft {
+  opacity: 0.3;
+}
+.grid .card-soft:hover {
+  opacity: 1;
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.card-soft {
+  background: rgba(26, 26, 46, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+/* Card colors */
+.card-soft.blue {
+  border-color: rgba(80, 150, 255, 0.3);
+  box-shadow: 0 0 20px rgba(80, 150, 255, 0.2);
+}
+.card-soft.blue:hover {
+  transform: translateY(-4px);
+  border-color: rgba(80, 150, 255, 0.6);
+  box-shadow: 0 0 25px rgba(80, 150, 255, 0.4);
+}
+.card-soft.yellow {
+  border-color: rgba(255, 220, 100, 0.4);
+  box-shadow: 0 0 20px rgba(255, 220, 100, 0.2);
+}
+.card-soft.yellow:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 220, 100, 0.6);
+  box-shadow: 0 0 25px rgba(255, 220, 100, 0.4);
+}
+.card-soft.purple {
+  border-color: rgba(150, 100, 255, 0.4);
+  box-shadow: 0 0 20px rgba(150, 100, 255, 0.2);
+}
+.card-soft.purple:hover {
+  transform: translateY(-4px);
+  border-color: rgba(150, 100, 255, 0.6);
+  box-shadow: 0 0 25px rgba(150, 100, 255, 0.4);
+}
+.card-soft.white {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+.card-soft.white:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+}
+
+.pill {
+  border-radius: 999px;
+  padding: 14px 30px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 15px;
+  color: #e0e0e0;
+  transition: background-color 0.2s ease;
+}
+.pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.heading {
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  font-size: 30px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.check-input {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 22px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 16px;
+  color: #e0e0e0;
+  font-family: "Press Start 2P", monospace;
+}
+.check-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.enter-btn {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 18px 42px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Press Start 2P", monospace;
+  transition: background-color 0.2s ease;
+}
+.enter-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.box {
+  height: 100%;
+}
+.logo {
+  max-height: 112px;
+}
+
+.box--topleft {
+  min-height: 240px;
+}
+.box--bottomleft {
+  min-height: 560px;
+}
+.box--bottomright {
+  min-height: 560px;
+}
+
+/* Fixed Header */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  padding: 12px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  opacity: 1; /* ĐÃ SỬA: Luôn hiển thị */
+  transform: translateY(0); /* ĐÃ SỬA: Luôn ở đúng vị trí */
+  transition: all 0.3s ease;
+}
+.site-header.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.site-header nav a {
+  color: #e0e0e0;
+  margin-left: 20px;
+  text-decoration: none;
+  font-size: 14px;
+}
+.site-header nav a:hover {
+  color: #42a5f5;
+}
+
+/* Scroll Down Arrow */
+.scroll-indicator {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  text-align: center;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  40% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+/* Fade-in */
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Recent Transactions Table */
+#tx-container table {
+  width: 100%;
+  border-collapse: collapse !important;
+  background: rgba(26, 26, 46, 0.3) !important;
+  border: none !important;
+  color: #e0e0e0 !important;
+  font-family: "Press Start 2P", monospace;
+}
+#tx-container thead tr {
+  color: #fff !important;
+  font-weight: bold;
+  border: none !important;
+}
+#tx-container tbody tr {
+  color: #e0e0e0 !important;
+}
+#tx-container tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+#tx-container td,
+#tx-container th {
+  border: none !important;
+  padding: 6px 10px;
+}
+#tx-container a {
+  color: #a7bce8 !important;
+  text-decoration: none;
+}
+#tx-container a:hover {
+  color: #fff !important;
+  text-decoration: underline;
+}
+
+@media (max-width: 992px) {
+  .header-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, auto);
+  }
+  .content-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, auto);
+  }
+  .box--bottomleft,
+  .box--bottomright {
+    min-height: 420px;
+  }
+}
+/* Analytics Results Inline */
+.analytics-content-inline {
+  padding: 12px 15px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: opacity 0.3s ease;
+  font-size: 16px;        /* chữ vừa phải, không quá to */
+  line-height: 1.5;       /* thoáng hơn */
+  min-height: 90px;
+  word-wrap: break-word;  /* khi text dài thì tự xuống dòng đẹp */
+}
+
+.analytics-content-inline.loading {
+  opacity: 0.6;
+}
+
+.analytics-content-inline ul {
+  margin: 0;
+  padding-left: 15px;
+  list-style-type: none;
+}
+
+.analytics-content-inline li {
+  margin-bottom: 6px;
+  font-size: 16px;        /* đồng bộ size với container */
+  position: relative;
+}
+
+.analytics-content-inline li::before {
+  content: "→";
+  font-size: 16px;
+  position: relative;
+  left: -12px;
+  color: #42a5f5;
+}
+
+/* Địa chỉ ví / TXID inline */
+#walletAddressInline {
+  font-size: 18px;              /* hơi nhấn mạnh hơn nội dung */
+  font-weight: 500;
+  color: rgba(255, 220, 100);
+  margin-bottom: 8px;
+  white-space: nowrap;          /* không cho xuống dòng */
+  overflow: hidden;
+  text-overflow: ellipsis;      /* rút gọn bằng … */
+}
+
+
+/* Loading dots animation */
+.loading-dots {
+  display: inline-block;
+}
+.loading-dots::after {
+  content: "...";
+  animation: loadingDots 1.5s infinite;
+}
+@keyframes loadingDots {
+  0%,
+  20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60%,
+  100% {
+    content: "...";
+  }
+}
+.scroll-indicator {
+  width: 250px; /* đủ rộng cho cả "Scroll Down ↓" và "Scroll Up ↑" */
+  justify-content: center;
+  left: 50%;
+  bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+
+  transform: translateX(-50%);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.scroll-indicator:hover {
+  color: #42a5f5;
+  transform: translateX(-50%) translateY(-5px);
+}
+
+#scrollText {
+  font-size: 18px;     /* to hơn chữ */
+  margin-bottom: 6px;  /* cách icon một chút */
+}
+
+#scrollIcon {
+  font-size: 28px;     /* icon mũi tên to hơn */
+  line-height: 1;
+}
+
+/* Overlay for transaction details */
+.tx-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  border-radius: 20px;
+}
+
+.tx-overlay-content {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  color: #eee;
+  width: 90%;
+}
+
+.tx-overlay h4 {
+  margin: 10px 0 5px;
+  color: #42a5f5;
+}
+
+.tx-overlay ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+  font-size: 0.9em;
+}
+
+.tx-overlay li {
+  padding: 4px 0;
+  border-bottom: 1px solid #333;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.close-btn:hover {
+  background: rgba(255,255,255,0.2);
+  color: #ff6b6b;
+}
+
+
+/* Transaction details table */
+.table-wrapper {
+  max-height: 60vh;   /* scroll dọc nếu nhiều item */
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 16px;
+}
+
+.tx-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85em;
+  color: #eee;
+}
+
+.tx-table th, .tx-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #333;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.tx-table th {
+  color: #42a5f5;
+  font-weight: bold;
+}
+
+.addr-cell {
+  max-width: 420px;     /* không cho tràn */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.addr-cell:hover {
+  white-space: normal;  /* hover thì bung full */
+  word-break: break-all;
+}
+
+
+/* Áp dụng riêng trong overlay */
+.tx-overlay-content ::-webkit-scrollbar {
+  width: 10px;      /* độ dày scrollbar dọc */
+  height: 10px;     /* độ dày scrollbar ngang (nếu có) */
+}
+
+.tx-overlay-content ::-webkit-scrollbar-track {
+  background: #111;   /* màu nền track */
+  border-radius: 10px;
+}
+
+.tx-overlay-content ::-webkit-scrollbar-thumb {
+  background: #444;   /* màu chính của thanh kéo */
+  border-radius: 10px;
+  border: 2px solid #111; /* tạo khoảng cách với track */
+}
+
+.tx-overlay-content ::-webkit-scrollbar-thumb:hover {
+  background: #666;   /* hover sáng hơn */
+}
+
+
+/* Tab views */
+.tx-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.tab-btn {
+  padding: 6px 12px;
+  background: #222;
+  color: #ccc;
+  border: 1px solid #444;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+.tab-btn.active {
+  background: #42a5f5;
+  color: #fff;
+  border-color: #42a5f5;
+}
+
+.tab-btn:hover {
+  background: #333;
+}
+
+
+
+/* Hover for address links */
+.addr-cell {
+  max-width: 420px;     
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fbc02d;        /* vàng mặc định */
+  font-weight: 500;
+  transition: color 0.2s ease, background 0.2s ease;
+  cursor: pointer;
+}
+
+.addr-cell:hover {
+  white-space: normal;   /* bung full địa chỉ khi hover */
+  word-break: break-all;
+  color: #fff176;        /* vàng sáng hơn khi hover */
+  background: rgba(251, 192, 45, 0.15); /* nền vàng nhạt khi hover */
+}

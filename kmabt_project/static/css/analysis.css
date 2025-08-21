@@ -1,0 +1,233 @@
+/* Analysis styles - Phần phân tích KMABT và third-party */
+
+.analysis-btn {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 18px 42px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Press Start 2P", monospace;
+  transition: background-color 0.2s ease;
+}
+
+.analysis-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.hide-btn-wrapper {
+  margin-top: 24px;    /* cách nội dung trên */
+  padding-bottom: 40px; /* tạo khoảng cách với đáy trang */
+}
+
+.analysis-section {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  display: none; /* Ẩn mặc định */
+  padding: 2rem 0;
+  margin: 0 2rem;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.analysis-content {
+  position: relative;
+  min-height: 200px;
+}
+
+.analysis-data {
+  display: grid;
+  gap: 1rem;
+}
+
+.analysis-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.analysis-label {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  flex: 1;
+}
+
+.analysis-value {
+  font-weight: 700;
+  color: #fff;
+  text-align: right;
+}
+
+.external-source {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.source-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.5rem;
+}
+
+.source-name {
+  font-weight: 600;
+  color: #fff;
+}
+
+.source-status {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.source-status.clean {
+  background: rgba(76, 175, 80, 0.3);
+  color: #4caf50;
+}
+
+.source-status.suspicious {
+  background: rgba(255, 152, 0, 0.3);
+  color: #ff9800;
+}
+
+.source-status.risky {
+  background: rgba(244, 67, 54, 0.3);
+  color: #f44336;
+}
+
+.source-data {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.analysis-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive cho analysis section */
+@media (max-width: 768px) {
+  .analysis-section {
+    margin: 0 1rem;
+    padding: 1rem 0;
+  }
+
+  .analysis-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .analysis-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .analysis-value {
+    text-align: left;
+  }
+}
+
+.source-status {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: white;
+}
+
+.source-status.status-ok {
+    background-color: #4caf50; /* Green */
+}
+
+.source-status.status-error {
+    background-color: #f44336; /* Red */
+}
+
+#external-analysis .source-data strong {
+    color: #ffc107; /* Amber color for highlighted data */
+}
+
+.analysis-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #ff9800; /* Orange */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.analysis-link {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #ff9800; /* Màu cam của section */
+    color: #1a1a1a;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.analysis-link:hover {
+    background-color: #ffb74d; /* Màu cam nhạt hơn khi hover */
+}

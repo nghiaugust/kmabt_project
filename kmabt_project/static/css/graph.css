@@ -1,0 +1,211 @@
+#graph-panel {
+    background: #0a0a0a;
+    min-height: 100vh;
+    padding: 20px;
+    color: #fff;
+}
+.graph-controls {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+}
+.graph-controls h3 {
+    color: #42a5f5;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.search-box input {
+    flex: 1;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 12px;
+    color: #fff;
+    font-size: 14px;
+}
+.search-box input::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+.btn-analyze {
+    background: #42a5f5;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+.btn-analyze:hover {
+    background: #1976d2;
+}
+.graph-stats {
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.stat-item {
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+}
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #42a5f5;
+    display: block;
+}
+.stat-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 4px;
+}
+.graph-container {
+    background: #1a1a1a;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+}
+.graph-info {
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+    min-height: 60px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 600px;
+    color: #42a5f5;
+    font-size: 16px;
+}
+
+/* Context Menu Styles */
+.context-menu {
+    position: absolute;
+    background: #2a2d3a;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 8px 0;
+    min-width: 200px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: none;
+}
+
+.context-menu-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    color: #fff;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.context-menu-item:hover {
+    background: rgba(66,165,245,0.2);
+}
+
+.context-menu-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.context-menu-item.disabled:hover {
+    background: transparent;
+}
+
+/* Removed expand indicator icon */
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #42a5f5;
+    font-size: 16px;
+    z-index: 999;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.loading-spinner {
+    border: 2px solid #333;
+    border-top: 2px solid #42a5f5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Styles for highlighted and dimmed elements */
+.highlighted {
+    opacity: 1 !important;
+    z-index: 999 !important;
+}
+
+.dimmed {
+    opacity: 0.3 !important;
+    z-index: 1 !important;
+}
+
+/* Context menu styles */
+.context-menu {
+    position: absolute;
+    background: rgba(30, 33, 46, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    min-width: 180px;
+    backdrop-filter: blur(10px);
+}
+
+.context-menu-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.context-menu-item:hover {
+    background: rgba(66, 165, 245, 0.2);
+}
+
+.context-menu-item:last-child {
+    border-bottom: none;
+}
+
+.context-menu-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.context-menu-item.disabled:hover {
+    background: transparent;
+}
+
+/* Newly expanded highlight classes are applied via Cytoscape selectors below */

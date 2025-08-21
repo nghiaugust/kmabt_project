@@ -1,0 +1,63 @@
+/* Base styles - Styles cơ bản cho toàn bộ website */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+html {
+  background: #0a0a0a;
+}
+
+body {
+  background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+    linear-gradient(
+      90deg,
+      #0e1a2b 0%,
+      #183b5c 25%,
+      #1f5c85 50%,
+      #183b5c 75%,
+      #0e1a2b 100%
+    );
+  min-height: fit-content;
+  padding-top: 0;
+  font-family: "Press Start 2P", monospace;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+  color: #e0e0e0;
+  zoom: 70%;
+}
+
+/* Typography */
+.heading {
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  font-size: 30px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+/* Loading dots animation */
+.loading-dots {
+  display: inline-block;
+}
+.loading-dots::after {
+  content: "...";
+  animation: loadingDots 1.5s infinite;
+}
+@keyframes loadingDots {
+  0%,
+  20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60%,
+  100% {
+    content: "...";
+  }
+}

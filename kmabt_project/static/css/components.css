@@ -1,0 +1,211 @@
+/* Components - Cards, buttons, forms và các UI components */
+
+/* Card Components */
+.card-soft {
+  background: rgba(26, 26, 46, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+/* Card hover effects */
+.grid .card-soft {
+  transition: all 0.25s ease;
+  opacity: 1;
+}
+.grid:hover .card-soft {
+  opacity: 0.3;
+}
+.grid .card-soft:hover {
+  opacity: 1;
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+/* Card color variants */
+.card-soft.blue {
+  border-color: rgba(80, 150, 255, 0.3);
+  box-shadow: 0 0 20px rgba(80, 150, 255, 0.2);
+}
+.card-soft.blue:hover {
+  transform: translateY(-4px);
+  border-color: rgba(80, 150, 255, 0.6);
+  box-shadow: 0 0 25px rgba(80, 150, 255, 0.4);
+}
+
+.card-soft.yellow {
+  border-color: rgba(255, 220, 100, 0.4);
+  box-shadow: 0 0 20px rgba(255, 220, 100, 0.2);
+}
+.card-soft.yellow:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 220, 100, 0.6);
+  box-shadow: 0 0 25px rgba(255, 220, 100, 0.4);
+}
+
+.card-soft.purple {
+  border-color: rgba(150, 100, 255, 0.4);
+  box-shadow: 0 0 20px rgba(150, 100, 255, 0.2);
+}
+.card-soft.purple:hover {
+  transform: translateY(-4px);
+  border-color: rgba(150, 100, 255, 0.6);
+  box-shadow: 0 0 25px rgba(150, 100, 255, 0.4);
+}
+
+.card-soft.white {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+.card-soft.white:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+}
+
+.card-soft.green {
+  border-color: rgba(76, 175, 80, 0.3);
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.2);
+}
+.card-soft.green:hover {
+  transform: translateY(-4px);
+  border-color: rgba(76, 175, 80, 0.6);
+  box-shadow: 0 0 25px rgba(76, 175, 80, 0.4);
+}
+
+.card-soft.orange {
+  border-color: rgba(255, 152, 0, 0.3);
+  box-shadow: 0 0 20px rgba(255, 152, 0, 0.2);
+}
+.card-soft.orange:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 152, 0, 0.6);
+  box-shadow: 0 0 25px rgba(255, 152, 0, 0.4);
+}
+
+/* Button Components */
+.pill {
+  border-radius: 999px;
+  padding: 14px 30px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 15px;
+  color: #e0e0e0;
+  transition: background-color 0.2s ease;
+}
+.pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.show-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 10px;
+  
+  transition: all 0.2s ease-in-out; /* Thêm dòng này để hiệu ứng mượt mà */
+}
+
+.show-btn:hover {
+  background: rgba(0, 0, 0, 0.85); /* Lớp nền tối mờ để làm nổi bật chữ trắng */
+  color: white; /* Hiện chữ */
+}
+
+.enter-btn {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 18px 42px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Press Start 2P", monospace;
+  transition: background-color 0.2s ease;
+}
+.enter-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.close-btn:hover {
+  background: rgba(255,255,255,0.2);
+  color: #ff6b6b;
+}
+
+/* Form Components */
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.check-input {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 22px;
+  padding-right: 90px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 16px;
+  color: #e0e0e0;
+  font-family: "Press Start 2P", monospace;
+}
+.check-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.clear-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 80px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  font-size: 24px;
+  border-radius: 0 12px 12px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.clear-btn:hover {
+  color: #ff6b6b;
+}
+
+/* Logo */
+.logo {
+  max-height: 112px;
+}

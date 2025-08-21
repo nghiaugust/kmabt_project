@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Giới thiệu dự án - KMABT{% endblock %}
+
+{% block content %}
+<div style="padding: 7rem; background: rgba(0,0,0,0.8); min-height: 100vh; color: white !important;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+        
+        <!-- Hero Section -->
+        <div style="background: rgba(255, 193, 7, 0.2); border-radius: 15px; padding: 2rem; margin-bottom: 2rem; text-align: center;">
+            <img src="{% static 'images/Logo KMABT.png' %}" alt="KMABT Logo" style="height: 80px; margin-bottom: 1rem; filter: brightness(0) invert(1);">
+            <h1 style="color: #FFD700 !important; font-size: 2.5rem; margin-bottom: 1rem;">KMABT</h1>
+            <h2 style="color: #FFD700 !important; font-size: 1.2rem; opacity: 0.8;">Blockchain Analysis & Visualization System</h2>
+            <p style="color: #FFD700 !important; margin-top: 1rem; opacity: 0.7;">A student research project for Blockchain transaction checking and analysis</p>
+        </div>
+
+        <!-- What We've Built -->
+        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
+            <h2 style="color: white !important; font-size: 1.5rem; margin-bottom: 1rem;">What We've Built</h2>
+            <div style="display: grid; gap: 1.5rem;">
+                <div style="border-left: 4px solid #42a5f5; padding-left: 1rem;">
+                    <h3 style="color: #42a5f5 !important; margin-bottom: 0.5rem;">📊 Address Checking</h3>
+                    <p style="color: white !important; opacity: 0.8;">Users can input Bitcoin addresses to track transaction history and analyze activity</p>
+                </div>
+                <div style="border-left: 4px solid #66bb6a; padding-left: 1rem;">
+                    <h3 style="color: #66bb6a !important; margin-bottom: 0.5rem;">🔍 Transaction Visualization</h3>
+                    <p style="color: white !important; opacity: 0.8;">Visual graphs showing connections and relationships between addresses and transactions</p>
+                </div>
+                <div style="border-left: 4px solid #f44336; padding-left: 1rem;">
+                    <h3 style="color: #f44336 !important; margin-bottom: 0.5rem;">🚨 Pattern Detection</h3>
+                    <p style="color: white !important; opacity: 0.8;">Basic anomaly detection for identifying unusual patterns or scams</p>
+                </div>
+                <div style="border-left: 4px solid #9c27b0; padding-left: 1rem;">
+                    <h3 style="color: #9c27b0 !important; margin-bottom: 0.5rem;">📁 Data Import</h3>
+                    <p style="color: white !important; opacity: 0.8;">Very large blockchain dataset about scams (mainly Bitcoin now)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Implementation -->
+        <div style="display: block; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 2rem;">
+            <div style="background: rgba(156, 39, 176, 0.2); border-radius: 15px; padding: 2rem;">
+                <h2 style="color: #9c27b0 !important; font-size: 1.5rem; margin-bottom: 1rem;">Current Status</h2>
+                <div style="color: white !important;">
+                    <div style="margin-bottom: 1rem;">
+                        <h4 style="color: #9c27b0 !important; margin-bottom: 0.5rem;">✅ Completed Features:</h4>
+                        <ul style="color: white !important; opacity: 0.8; font-size: 0.9rem;">
+                            <li>User interface for address input</li>
+                            <li>Basic wallet address analysis</li>
+                            <li>Basic transaction tracking</li>
+                            <li>Visual graph generation</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #9c27b0 !important; margin-bottom: 0.5rem;">🔄 In Development:</h4>
+                        <ul style="color: white !important; opacity: 0.8; font-size: 0.9rem;">
+                            <li>Advanced ML pattern detection</li>
+                            <li>Enhanced visualization features</li>
+                            <li>Performance optimizations</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team & Institution -->
+        <div style="background: rgba(66, 165, 245, 0.1); border-radius: 15px; padding: 2rem;">
+            <h2 style="color: #42a5f5 !important; font-size: 1.5rem; margin-bottom: 1rem;">About This Project</h2>
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: center;">
+                <div style="color: white !important;">
+                    <p style="margin-bottom: 1rem; opacity: 0.9;">KMABT is developed as a student research project at the Academy of Cryptography Techniques (KMA), Vietnam's leading institution for cybersecurity education.</p>
+                    
+                    <h3 style="color: #42a5f5 !important; margin-bottom: 0.5rem; font-size: 1.1rem;">Project Focus Areas:</h3>
+                    <ul style="color: white !important; opacity: 0.8;">
+                        <li>Bitcoin blockchain data analysis</li>
+                        <li>Transaction pattern visualization</li>
+                        <li>Anomaly detection research</li>
+                        <li>User-friendly crypto investigation tools</li>
+                    </ul>
+                    
+                    <p style="margin-top: 1rem; opacity: 0.8; font-style: italic;">This is a learning project aimed at understanding blockchain forensics and developing practical analysis tools.</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="{% static 'images/Logo KMA.png' %}" alt="KMA Logo" style="height: 100px; margin-bottom: 1rem;">
+                    <p style="color: white !important; opacity: 0.8; font-size: 0.9rem;">Academy of Cryptography Techniques</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Responsive styles -->
+<style>
+    @media (max-width: 768px) {
+        div[style*="grid-template-columns: 1fr 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+        div[style*="grid-template-columns: 2fr 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+        h1 {
+            font-size: 2rem !important;
+        }
+        h2 {
+            font-size: 1.3rem !important;
+        }
+        div[style*="padding: 2rem"] {
+            padding: 1rem !important;
+        }
+    }
+</style>
+{% endblock %}
