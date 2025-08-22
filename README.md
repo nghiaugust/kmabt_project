@@ -18,7 +18,6 @@ Dưới đây là mô tả ngắn về các thành phần chính trong thư mụ
 .  
 │   bitcoin-tracer-main.rar     #Folder core algorithm
 │   db.sqlite3                  #Our databse
-│   README.md
 │   requirements.txt            #Thư viện cần thiết
 │   
 ├───kmabt_project
