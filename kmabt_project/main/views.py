@@ -488,7 +488,7 @@ def expand_node(request):
                 })
 
     if not nodes and not edges:
-        return JsonResponse({'error': 'Không tìm thấy dữ liệu mới để mở rộng'}, status=200)
+        return JsonResponse({'error': 'No new data found to expand'}, status=200)
 
     return JsonResponse({
         'message': f'From {address[:10]}...',
@@ -514,19 +514,19 @@ def submit_report(request):
         if not target_type or target_type not in ['address', 'transaction']:
             return JsonResponse({
                 'success': False,
-                'error': 'Loại báo cáo không hợp lệ'
+                'error': 'Invalid report type'
             }, status=400)
         
         if not target_value:
             return JsonResponse({
                 'success': False,
-                'error': 'Vui lòng nhập địa chỉ ví hoặc transaction ID'
+                'error': 'Please enter a Bitcoin address or transaction ID'
             }, status=400)
         
         if not report_type:
             return JsonResponse({
                 'success': False,
-                'error': 'Vui lòng chọn loại vấn đề'
+                'error': 'Please select a report type'
             }, status=400)
         
         # Validate Bitcoin address hoặc transaction ID
@@ -534,7 +534,7 @@ def submit_report(request):
             if not _is_valid_btc_address(target_value):
                 return JsonResponse({
                     'success': False,
-                    'error': 'Địa chỉ Bitcoin không hợp lệ'
+                    'error': 'Invalid Bitcoin address'
                 }, status=400)
         elif target_type == 'transaction':
             # Validate transaction ID (64 ký tự hex)
@@ -542,7 +542,7 @@ def submit_report(request):
             if not re.match(r'^[a-fA-F0-9]{64}$', target_value):
                 return JsonResponse({
                     'success': False,
-                    'error': 'Transaction ID không hợp lệ'
+                    'error': 'Invalid transaction ID'
                 }, status=400)
         
         # Lưu vào database
@@ -552,7 +552,7 @@ def submit_report(request):
             if existing_address:
                 return JsonResponse({
                     'success': False,
-                    'error': f'Địa chỉ này đã được báo cáo với loại: {existing_address.report_type}'
+                    'error': f'This address has already been reported with type: {existing_address.report_type}'
                 }, status=400)
             
             # Tạo báo cáo mới cho địa chỉ
@@ -565,7 +565,7 @@ def submit_report(request):
             
             return JsonResponse({
                 'success': True,
-                'message': 'Báo cáo địa chỉ đã được gửi thành công',
+                'message': 'Address report has been successfully submitted',
                 'report_id': address_report.id
             })
         
@@ -575,7 +575,7 @@ def submit_report(request):
             if existing_transaction:
                 return JsonResponse({
                     'success': False,
-                    'error': f'Giao dịch này đã được báo cáo với loại: {existing_transaction.report_type}'
+                    'error': f'This transaction has already been reported with type: {existing_transaction.report_type}'
                 }, status=400)
             
             # Tạo báo cáo mới cho giao dịch
@@ -588,21 +588,21 @@ def submit_report(request):
             
             return JsonResponse({
                 'success': True,
-                'message': 'Báo cáo giao dịch đã được gửi thành công',
+                'message': 'Transaction report has been successfully submitted',
                 'report_id': transaction_report.id
             })
     
     except json.JSONDecodeError:
         return JsonResponse({
             'success': False,
-            'error': 'Dữ liệu JSON không hợp lệ'
+            'error': 'Invalid JSON data'
         }, status=400)
     
     except Exception as e:
         print(f"Error in submit_report: {e}")
         return JsonResponse({
             'success': False,
-            'error': 'Có lỗi xảy ra khi xử lý báo cáo'
+            'error': 'An error occurred while processing the report'
         }, status=500)
 
 

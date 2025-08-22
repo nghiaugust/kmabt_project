@@ -167,9 +167,16 @@
 </section>
 
 {% block script %}
+<script src="{% static 'js/price_service.js' %}"></script>
+<script src="{% static 'js/mempool_service.js' %}"></script>
+<script src="{% static 'js/ui_controller.js' %}"></script>
+<!-- Các services ở trên chạy trước main -->
+<script src="{% static 'js/main.js' %}"></script>
+
 <script src="{% static 'js/address_service.js' %}"></script>
 <script src="{% static 'js/transaction_service.js' %}"></script>
 <script src="{% static 'js/analysis_service.js' %}"></script>
+<script src="{% static 'js/utils.js' %}"></script>
 {% endblock %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
