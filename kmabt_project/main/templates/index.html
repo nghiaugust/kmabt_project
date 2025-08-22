@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Trang chủ - KMABT{% endblock %}
+{% block title %}Home - KMABT{% endblock %}
 {% block content %}
 
 {% block styles %}
@@ -18,7 +18,7 @@
             </div>
             <div class="d-flex gap-2">
                 <button class="enter-btn" onclick="handleEnter()">Enter</button>
-                <button class="analysis-btn" style="display: none;" onclick="toggleAnalysis()">Analyze</button>
+                <button class="analysis-btn" style="display: none;" onclick="AnalysisService.toggleAnalysis()">Analyze</button>
             </div>
         </div>
 
@@ -61,22 +61,28 @@
             <div class="heading" style="color: #4caf50">Wallet Analysis</div>
             <div class="analysis-content">
                 <div id="internal-analysis-content" class="analysis-data">
+                <div id="internal-analysis-content" class="analysis-data">
                     <div class="analysis-item">
-                        <div class="analysis-label">Risk Score</div>
-                        <div id="risk-score" class="analysis-value">--</div>
+                        <div class="analysis-label">CoinJoin Detected</div>
+                        <div id="is-coinjoin" class="analysis-value">--</div>
                     </div>
                     <div class="analysis-item">
-                        <div class="analysis-label">Transaction Pattern</div>
-                        <div id="tx-pattern" class="analysis-value">Normal</div>
+                        <div class="analysis-label">Total Volume</div>
+                        <div id="total-volume" class="analysis-value">--</div>
                     </div>
                     <div class="analysis-item">
-                        <div class="analysis-label">Address Type</div>
-                        <div id="address-type" class="analysis-value">Individual</div>
+                        <div class="analysis-label">CoinJoin Transactions</div>
+                        <div id="coinjoin-txs" class="analysis-value">--</div>
+                    </div>
+                    <div class="analysis-item" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+                        <div class="analysis-label">Analysis Summary</div>
+                        <div id="analysis-message" class="analysis-value" style="font-size: 0.8em; white-space: normal; color: #bdc3c7;">--</div>
                     </div>
                     <div class="analysis-item">
-                        <div class="analysis-label">Last Activity</div>
-                        <div id="last-activity" class="analysis-value">--</div>
+                        <div class="analysis-label">Max Depth</div>
+                        <div id="max-depth" class="analysis-value">--</div>
                     </div>
+                </div>
                 </div>
                 <div class="analysis-loading" style="display: none;">
                     <div class="loading-spinner"></div>
@@ -167,9 +173,16 @@
 </section>
 
 {% block script %}
+<script src="{% static 'js/analysis_service.js' %}"></script>
+<script src="{% static 'js/price_service.js' %}"></script>
+<script src="{% static 'js/mempool_service.js' %}"></script>
+<script src="{% static 'js/ui_controller.js' %}"></script>
+<!-- Các services ở trên chạy trước main -->
+<script src="{% static 'js/main.js' %}"></script>
+
 <script src="{% static 'js/address_service.js' %}"></script>
 <script src="{% static 'js/transaction_service.js' %}"></script>
-<script src="{% static 'js/analysis_service.js' %}"></script>
+<script src="{% static 'js/utils.js' %}"></script>
 {% endblock %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -268,6 +281,158 @@ document.addEventListener('DOMContentLoaded', function() {
             resetAnalysisView();        // Reset lại giao diện
             updateButtonState();        // Cập nhật lại trạng thái các nút
             checkInput.focus();         // Tự động focus lại vào ô input
+        });
+    }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // --- Get references to HTML elements ---
+    const enterButton = document.querySelector('.enter-btn');
+    const checkInput = document.getElementById('checkInput');
+    const graphLink = document.getElementById('graphLink');
+    const investigateLink = document.getElementById('investigateLink');
+    const analyticsResults = document.getElementById('analyticsResults');
+    const logoContainer = document.getElementById('logoContainer');
+    const analysisSection = document.querySelector('.analysis-section');
+    const analysisBtn = document.querySelector('.analysis-btn');
+    const clearInputBtn = document.getElementById('clearInputBtn');
+
+    // --- Store original state for resetting ---
+    const originalGraphText = graphLink.innerText;
+    const originalInvestigateText = investigateLink.innerText;
+    const originalAnalysisContent = document.getElementById('internal-analysis-content').innerHTML;
+
+    // --- Validation functions ---
+    function isBtcAddress(input) {
+        const isP2PKH = /^[1][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(input);
+        const isP2SH = /^[3][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(input);
+        const isBech32 = /^bc1[ac-hj-np-z02-9]{11,71}$/i.test(input);
+        return isP2PKH || isP2SH || isBech32;
+    }
+
+    function isTxHash(input) {
+        return /^[a-fA-F0-9]{64}$/.test(input);
+    }
+    
+    // --- Reset UI to its initial state ---
+    function resetAnalysisView() {
+        if (analyticsResults) analyticsResults.style.display = 'none';
+        if (logoContainer) logoContainer.style.display = 'flex';
+        if (analysisSection) analysisSection.style.display = 'none';
+        if (analysisBtn) analysisBtn.style.display = 'none';
+        // Restore original analysis content
+        document.getElementById('internal-analysis-content').innerHTML = originalAnalysisContent;
+    }
+
+    // --- Update button states based on input ---
+    function updateButtonState() {
+        const inputValue = checkInput.value.trim();
+        graphLink.style.display = '';
+        investigateLink.style.display = '';
+        graphLink.innerText = originalGraphText;
+        investigateLink.innerText = originalInvestigateText;
+        
+        if (clearInputBtn) {
+            clearInputBtn.style.display = inputValue ? 'block' : 'none';
+        }
+
+        if (inputValue === '') return;
+
+        if (isBtcAddress(inputValue)) {
+            graphLink.innerText = 'Trace this Address';
+            investigateLink.style.display = 'none';
+        } else if (isTxHash(inputValue)) {
+            investigateLink.innerText = 'Investigate this Transaction';
+            graphLink.style.display = 'none';
+        } else {
+            graphLink.style.display = 'none';
+            investigateLink.style.display = 'none';
+        }
+    }
+
+    // --- Fetch and display analysis data from the API ---
+    async function fetchAnalysisData(address) {
+        const analysisContent = document.getElementById('internal-analysis-content');
+        const loadingIndicator = document.querySelector('#internal-analysis .analysis-loading');
+
+        // Show loading state
+        analysisSection.style.display = 'block';
+        analysisContent.style.display = 'none';
+        loadingIndicator.style.display = 'flex';
+
+        const apiUrl = 'http://localhost:8005/investigate';
+        const maxDepth = 5;
+        const requestData = { address, max_depth: maxDepth };
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                 const errorData = await response.json().catch(() => ({ message: response.statusText }));
+                 throw new Error(`API error: ${errorData.message || response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            // Populate UI with fetched data
+            document.getElementById('is-coinjoin').textContent = data.is_coinjoin ? 'Yes' : 'No';
+            document.getElementById('is-coinjoin').style.color = data.is_coinjoin ? '#ff9800' : '#4caf50';
+            document.getElementById('total-volume').textContent = `${(data.total_volume || 0).toFixed(8)} BTC`;
+            document.getElementById('coinjoin-txs').textContent = data.coinjoin_transactions ? data.coinjoin_transactions.length : 0;
+            document.getElementById('analysis-message').textContent = data.message || 'No summary available.';
+            document.getElementById('max-depth').textContent = maxDepth;
+
+        } catch (error) {
+            console.error('Error fetching analysis data:', error);
+            analysisContent.innerHTML = `<div class="analysis-item" style="color: #f44336; justify-content: center;">Failed to load analysis: ${error.message}</div>`;
+        } finally {
+            // Hide loading indicator and show content
+            loadingIndicator.style.display = 'none';
+            analysisContent.style.display = 'block';
+        }
+    }
+
+    // --- Handle the "Enter" button click ---
+    function handleEnterClick() {
+        const inputValue = checkInput.value.trim();
+
+        if (isBtcAddress(inputValue)) {
+            document.cookie = `bitcoinAddress=${encodeURIComponent(inputValue)}; path=/; max-age=86400`;
+            fetchAnalysisData(inputValue); // Trigger analysis
+        } else if (isTxHash(inputValue)) {
+            document.cookie = `bitcoinAddress=${encodeURIComponent(inputValue)}; path=/; max-age=86400`;
+            console.log("Transaction hash entered. Analysis for transactions is not implemented in this section.");
+        } else if (inputValue !== '') {
+            alert('Invalid data. Please enter a valid Bitcoin address or transaction hash.');
+        }
+    }
+
+    // --- Event Listeners ---
+    if (checkInput) {
+        checkInput.addEventListener('input', () => {
+            resetAnalysisView();
+            updateButtonState();
+        });
+        checkInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') handleEnterClick();
+        });
+    }
+
+    if (enterButton) {
+        enterButton.addEventListener('click', handleEnterClick);
+    }
+    
+    if (clearInputBtn) {
+        clearInputBtn.addEventListener('click', () => {
+            checkInput.value = '';
+            resetAnalysisView();
+            updateButtonState();
+            checkInput.focus();
         });
     }
 });

@@ -204,7 +204,7 @@ const AnalysisService = {
     if (!section) return;
     const isHidden = section.style.display === "none" || !section.style.display;
     section.style.display = isHidden ? "grid" : "none";
-
+    
     if (isHidden) {
       const address = document.getElementById("checkInput").value.trim();
       if (address) {
@@ -239,6 +239,3 @@ const AnalysisService = {
 };
 
 window.AnalysisService = AnalysisService;
-document.addEventListener("DOMContentLoaded", () => {
-  AnalysisService.init();
-});

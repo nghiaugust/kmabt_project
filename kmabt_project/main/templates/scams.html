@@ -1,23 +1,234 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Scams - KMABT{% endblock %}
+{% block title %}Investigator - KMABT{% endblock %}
 
 {% block content %}
-<section class="main-header">
+<section class="main-header" style="box-sizing: border-box; position: none; padding-bottom: none;">
+    <style>
+        code {
+            font-family: inherit; /* Kế thừa font từ phần tử cha */
+            font-size: 0.9em;   /* Giảm cỡ chữ một chút cho dễ nhìn */
+        }
+        #graphsTableContainer .table td,
+        #graphsTableContainer .table th {
+            font-size: 0.85rem;      /* Thu nhỏ cỡ chữ lại một chút */
+            vertical-align: middle; /* Căn giữa nội dung trong ô theo chiều dọc */
+        }
+    </style>
     <div class="container">
-        <div class="card-soft purple box fade-in">
-            <div class="heading" style="color: rgba(150, 100, 255, 0.6)">Scam Detection</div>
+        <div class="card-soft purple box">
+            <div class="heading" style="color: rgba(150, 100, 255, 0.6)">CoinJoin Investigator & Dashboard</div>
             <div class="mt-3">
-                <div id="scamContainer" style="min-height: 400px;">
-                    <!-- Your scam detection content will go here -->
-                    <div class="text-center text-muted">
-                        <p style="color: #ff4d4f;">Scam detection system coming soon...</p>
-                        <p style="color: #ffa940;">This page will display known scam addresses and suspicious activities.</p>
+                
+                <div id="dashboardSection">
+                <div class="row mt-2 text-center align-items-stretch">
+                        <div class="col-md-3 mb-3"><div class="card bg-danger text-white h-100"><div class="card-body d-flex flex-column justify-content-center"><h4 id="totalCoinjoinTxs">--</h4><p class="mb-0">Total CoinJoin Txs</p></div></div></div>
+                        <div class="col-md-3 mb-3"><div class="card bg-dark text-white card-body py-2 h-100 d-flex flex-column justify-content-center"><small>Neo4j</small><span id="neo4jStatus" class="fw-bold">--</span></div></div>
+                        <div class="col-md-3 mb-3"><div class="card bg-dark text-white card-body py-2 h-100 d-flex flex-column justify-content-center"><small>Monitoring</small><span id="monitoringStatusHealth" class="fw-bold">--</span></div></div>
+                        <div class="col-md-3 mb-3"><div class="card bg-dark text-white card-body py-2 h-100 d-flex flex-column justify-content-center"><small>ML Model</small><span id="mlModelStatus" class="fw-bold">--</span></div></div>
+                    </div>
+                </div>
+                <hr>
+                
+                <div id="investigationSection">
+                    <div class="row mb-4">
+                        <div class="col-md-9"><div class="input-group"><input type="text" id="investigateInput" class="form-control" placeholder="Enter Bitcoin TXID..."><span class="input-group-text" title="Investigation depth: Higher value means deeper analysis but longer processing time. (Max: 10)">Depth</span><input type="number" id="maxDepthInput" class="form-control" style="flex: 0 0 90px;" min="1" max="10" value="5"><button class="btn btn-warning" type="button" onclick="investigateFromScams()"><i class="fas fa-search"></i> Go</button></div></div>
+                        <div class="col-md-3"><button class="btn btn-info w-100 h-100" style="font-size: 12px;" onclick="viewAllReports()"><i class="fas fa-list"></i> View All Reports</button></div>
+                    </div>
+                    <div id="investigationResults" style="display: none;"><div class="card bg-dark text-white"><div class="card-header"><h5>Investigation Results</h5></div><div class="card-body" id="investigationBody"></div></div></div>
+                </div>
+
+                <div id="graphsSection" class="mt-4">
+                    <h5>Recent Analysis Graphs</h5>
+                    <div id="singleGraphDisplay">
+                        <div class="card bg-dark text-white p-3">
+                            <div id="latestGraphContent"><p class="text-muted text-center">Loading recent graphs...</p></div>
+                        </div>
+                        <button id="showMoreGraphsBtn" class="btn btn-outline-secondary btn-sm mt-2 w-100" style="display: none;" onclick="showAllGraphs()">Show More</button>
+                    </div>
+
+                    <div id="allGraphsContainer" style="display: none; border: 1px solid #495057; border-radius: .375rem;">
+                        <div class="p-2 border-bottom border-secondary d-flex justify-content-end">
+                            <button class="btn btn-outline-secondary btn-sm" onclick="hideAllGraphs()">Show Less</button>
+                        </div>
+                        <div style="max-height: 300px; overflow-y: auto;">
+                            <div id="graphsTableContainer"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<script src="{% static 'js/utils.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardData();
+    loadGraphs();
+});
+
+function showAllGraphs() {
+    document.getElementById('singleGraphDisplay').style.display = 'none';
+    document.getElementById('allGraphsContainer').style.display = 'block';
+}
+
+function hideAllGraphs() {
+    document.getElementById('allGraphsContainer').style.display = 'none';
+    document.getElementById('singleGraphDisplay').style.display = 'block';
+}
+
+function loadDashboardData() {
+    const dashboardSection = document.getElementById('dashboardSection');
+
+    Promise.all([
+        fetch('http://localhost:8005/health').then(res => res.ok ? res.json() : Promise.reject(`Health API error! Status: ${res.status}`)),
+        fetch('http://localhost:8005/statistics').then(res => res.ok ? res.json() : Promise.reject(`Statistics API error! Status: ${res.status}`))
+    ])
+    .then(([healthData, statsData]) => {
+        // --- Bắt đầu phần sửa đổi MÀU NỀN ---
+
+        // Xử lý Health Status
+        const neo4jEl = document.getElementById('neo4jStatus');
+        const neo4jCard = neo4jEl.closest('.card'); // Lấy thẻ card cha
+        neo4jCard.classList.remove('bg-dark'); // Xóa màu nền mặc định
+
+        if (healthData.neo4j === 'connected') {
+            neo4jEl.textContent = 'Connected';
+            neo4jCard.classList.add('bg-success'); // Nền màu xanh lá
+        } else {
+            neo4jEl.textContent = 'Disconnected';
+            neo4jCard.classList.add('bg-danger');  // Nền màu đỏ
+        }
+
+        const monitoringEl = document.getElementById('monitoringStatusHealth');
+        const monitoringCard = monitoringEl.closest('.card');
+        monitoringCard.classList.remove('bg-dark');
+
+        if (healthData.monitoring) {
+            monitoringEl.textContent = 'Active';
+            monitoringCard.classList.add('bg-success'); // Nền màu xanh lá
+        } else {
+            monitoringEl.textContent = 'Inactive';
+            monitoringCard.classList.add('bg-secondary');// Nền màu xám
+        }
+
+        const mlModelEl = document.getElementById('mlModelStatus');
+        const mlModelCard = mlModelEl.closest('.card');
+        mlModelCard.classList.remove('bg-dark');
+        
+        if (healthData.ml_model === 'loaded') {
+            mlModelEl.textContent = 'Loaded';
+            mlModelCard.classList.add('bg-success'); // Nền màu xanh lá
+        } else {
+            mlModelEl.textContent = 'Not Loaded';
+            mlModelCard.classList.add('bg-danger');  // Nền màu đỏ
+        }
+
+        // --- Kết thúc phần sửa đổi màu nền ---
+
+        // Xử lý Statistics
+        if (statsData && statsData.statistics) {
+            document.getElementById('totalCoinjoinTxs').textContent = statsData.statistics.total_coinjoin_transactions;
+        } else {
+            document.getElementById('totalCoinjoinTxs').textContent = 'N/A';
+        }
+    })
+    .catch(error => {
+        console.error('Error loading dashboard data:', error);
+        dashboardSection.innerHTML = `<div class="alert alert-danger text-center"><p class="mb-0"><strong>Dashboard Unavailable.</strong> Could not load backend data.</p></div>`;
+    });
+}
+
+function loadGraphs() {
+    const graphsSection = document.getElementById('graphsSection');
+    const singleGraphContent = document.getElementById('latestGraphContent');
+    const showMoreBtn = document.getElementById('showMoreGraphsBtn');
+    const tableContainer = document.getElementById('graphsTableContainer');
+    
+    fetch('http://localhost:8005/coinjoin/graphs')
+        .then(response => { if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`); return response.json(); })
+        .then(data => {
+            if (data.status !== 'success' || !Array.isArray(data.graphs)) { throw new Error('Invalid data format from graphs API.'); }
+            if (data.graphs.length === 0) {
+                singleGraphContent.innerHTML = '<p class="text-muted text-center">No recent analysis graphs found.</p>';
+                return;
+            }
+
+            // 1. Hiển thị giao dịch gần nhất với đầy đủ thông tin
+            const latestGraph = data.graphs[0];
+            const latestFormattedDate = new Date(latestGraph.timestamp).toLocaleString('vi-VN');
+            singleGraphContent.innerHTML = `
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <p class="mb-1"><strong>TXID:</strong> <code style="word-break: break-all;">${latestGraph.txid}</code></p>
+                        <small class="text-muted">Timestamp: ${latestFormattedDate}</small>
+                    </div>
+                    <div class="col-lg-4 text-lg-end mt-2 mt-lg-0">
+                        <p class="mb-1"><strong>CoinJoin Found:</strong> <span class="badge bg-danger">${latestGraph.coinjoin_found}</span></p>
+                        <p class="mb-0"><strong>Addresses:</strong> ${latestGraph.total_coinjoin_addresses}</p>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button class="btn btn-warning" onclick="investigateGraphTxid('${latestGraph.txid}')">Investigate This Transaction</button>
+                </div>
+            `;
+
+            // 2. Tạo bảng đầy đủ cho vùng ẩn
+            let tableHTML = `<div class="table-responsive"><table class="table table-dark table-striped mb-0"><thead><tr><th>TXID</th><th>Timestamp</th><th>CoinJoin Found</th><th>Total CoinJoin Addresses</th><th>Action</th></tr></thead><tbody>`;
+            data.graphs.forEach(graph => {
+                const formattedDate = new Date(graph.timestamp).toLocaleString('vi-VN');
+                tableHTML += `<tr><td style="word-break: break-all;"><code fs-6>${graph.txid}</code></td><td>${formattedDate}</td><td><span class="badge bg-danger">${graph.coinjoin_found}</span></td><td>${graph.total_coinjoin_addresses}</td><td><button class="btn btn-sm btn-warning" onclick="investigateGraphTxid('${graph.txid}')">Re-investigate</button></td></tr>`;
+            });
+            tableHTML += '</tbody></table></div>';
+            tableContainer.innerHTML = tableHTML;
+
+            // 3. Chỉ hiển thị nút "Show More" nếu có nhiều hơn 1 giao dịch
+            if (data.graphs.length > 1) {
+                showMoreBtn.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading graphs:', error);
+            graphsSection.innerHTML = `<h5 class="text-danger">Recent Analysis Graphs</h5><div class="alert alert-danger text-center"><p class="mb-0"><strong>Graphs Unavailable.</strong> This feature has been disabled.</p></div>`;
+        });
+}
+
+function investigateGraphTxid(txid) { document.getElementById('investigateInput').value = txid; investigateFromScams(); window.scrollTo(0, 0); }
+
+function investigateFromScams() {
+    // ... (Hàm này giữ nguyên như cũ) ...
+    const txid = document.getElementById('investigateInput').value.trim();
+    const maxDepth = parseInt(document.getElementById('maxDepthInput').value, 10);
+    if (!txid || (typeof Utils !== 'undefined' && typeof Utils.isTxid === 'function' && !Utils.isTxid(txid))) { alert('Please enter a valid Bitcoin TXID.'); return; }
+    if (isNaN(maxDepth) || maxDepth < 1 || maxDepth > 10) { alert('Please enter a valid depth between 1 and 10.'); return; }
+    const resultsDiv = document.getElementById('investigationResults');
+    const resultsBody = document.getElementById('investigationBody');
+    resultsDiv.style.display = 'block';
+    resultsBody.innerHTML = `<div class="text-center"><div class="spinner-border text-warning" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Investigating ${txid} with depth ${maxDepth}...</p></div>`;
+    const payload = { txid: txid, max_depth: maxDepth };
+    fetch('http://localhost:8005/investigate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+    .then(response => response.json())
+    .then(data => {
+        console.log('API Response JSON:', data);
+        if (data.detail) {
+            let errorMessage = data.detail;
+            if (errorMessage === "Transaction không tìm thấy") errorMessage = "Transaction not found";
+            resultsBody.innerHTML = `<div class="alert alert-danger"><strong>Investigation Failed:</strong><br>${errorMessage}</div>`;
+            return;
+        }
+        const isCoinjoin = data.is_coinjoin;
+        resultsBody.innerHTML = `<div class="alert ${isCoinjoin ? 'alert-danger' : 'alert-success'}"><strong>${isCoinjoin ? '🚨 COINJOIN DETECTED' : '✅ NO COINJOIN DETECTED'}</strong></div><p><strong>Analysis:</strong> ${data.message}</p><hr><div class="row"><div class="col-md-6"><h5>Heuristic Analysis</h5><ul class="list-group list-group-flush"><li class="list-group-item bg-dark text-white"><strong>Is CoinJoin:</strong> ${data.heuristic.is_coinjoin ? 'Yes' : 'No'}</li><li class="list-group-item bg-dark text-white"><strong>Score:</strong> ${data.heuristic.score}</li><li class="list-group-item bg-dark text-white"><strong>Inputs:</strong> ${data.heuristic.indicators.input_count} | <strong>Outputs:</strong> ${data.heuristic.indicators.output_count}</li><li class="list-group-item bg-dark text-white"><strong>Uniformity Score:</strong> ${data.heuristic.uniformity_score}</li><li class="list-group-item bg-dark text-white"><strong>Diversity Score:</strong> ${data.heuristic.diversity_score}</li></ul></div><div class="col-md-6"><h5>Machine Learning Analysis</h5><ul class="list-group list-group-flush"><li class="list-group-item bg-dark text-white"><strong>Is CoinJoin:</strong> ${data.ml.is_coinjoin ? 'Yes' : 'No'}</li><li class="list-group-item bg-dark text-white"><strong>Probability:</strong> ${(data.ml.probability * 100).toFixed(2)}%</li><li class="list-group-item bg-dark text-white"><strong>Model:</strong> ${data.ml.model_name}</li><li class="list-group-item bg-dark text-white"><strong>Threshold:</strong> ${data.ml.threshold}</li></ul></div></div>`;
+    })
+    .catch(error => {
+        console.error('Investigation error:', error);
+        resultsBody.innerHTML = `<div class="alert alert-danger"><strong>Network Error:</strong><br>Cannot connect to backend API. Please ensure it is running.</div>`;
+    });
+}
+
+function hideInvestigation() { document.getElementById('investigationResults').style.display = 'none'; }
+function viewReports() { window.location.href = '/list-report/'; }
+function viewAllReports() { window.location.href = '/list-report/'; }
+</script>
 {% endblock %}

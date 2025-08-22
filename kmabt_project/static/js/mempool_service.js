@@ -92,8 +92,8 @@ const MempoolService = {
         // Chạy lần đầu
         this.fetchMempoolTransactions();
         
-        // Update mempool mỗi 3 giây
-        setInterval(() => this.fetchMempoolTransactions(), 3000);
+        // Update mempool mỗi 5 giây
+        setInterval(() => this.fetchMempoolTransactions(), 5000);
     }
 };
 
