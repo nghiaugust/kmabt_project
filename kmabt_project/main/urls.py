@@ -14,6 +14,7 @@ urlpatterns = [
     path('submit-report/', views.submit_report, name='submit_report'), # API gửi báo cáo
     path('api/reported-addresses/', views.get_reported_addresses, name='get_reported_addresses'), # API lấy địa chỉ đã báo cáo
     path('api/reported-transactions/', views.get_reported_transactions, name='get_reported_transactions'), # API lấy giao dịch đã báo cáo
+    path('api/address-transactions/', views.get_address_transactions_detailed, name='get_address_transactions_detailed'), # API lấy chi tiết giao dịch của địa chỉ
     
     # APIs cho staff quản lý reports
     path('api/update-address-status/', views.update_address_status, name='update_address_status'),
