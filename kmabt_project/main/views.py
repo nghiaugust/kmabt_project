@@ -6,6 +6,9 @@ from django.shortcuts import redirect
 from django.contrib import messages
 import requests
 import json
+import re
+import time
+import traceback
 from urllib.parse import unquote
 from datetime import datetime
 
@@ -805,4 +808,289 @@ def delete_transaction_report(request, transaction_id):
         return JsonResponse({
             'success': False,
             'error': 'An error occurred while deleting'
+        }, status=500)
+
+
+def _fetch_from_blockcypher(address, limit=50, offset=0):
+    """Fetch transaction data from BlockCypher API as fallback"""
+    try:
+        # BlockCypher uses 'before' parameter instead of offset for pagination
+        url = f"https://api.blockcypher.com/v1/btc/main/addrs/{address}/full?limit={limit}"
+        if offset > 0:
+            # For simplicity, we'll just get the first page when offset > 0
+            # BlockCypher pagination works differently with 'before' parameter
+            pass
+            
+        print(f"DEBUG: Calling BlockCypher API URL: {url}")
+        response = requests.get(url, timeout=30)
+        print(f"DEBUG: BlockCypher API response status: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            txs = data.get('txs', [])
+            print(f"DEBUG: BlockCypher received {len(txs)} transactions")
+            
+            # Process transaction data to match our format
+            transactions = []
+            for i, tx in enumerate(txs[:limit]):  # Limit to requested number
+                try:
+                    print(f"DEBUG: Processing BlockCypher transaction {i+1}/{len(txs)}: {tx.get('hash', 'unknown')}")
+                    
+                    # Calculate input/output values for this address
+                    inputs_value = 0
+                    outputs_value = 0
+                    found_address = False
+                    
+                    # Check inputs
+                    for inp in tx.get('inputs', []):
+                        inp_addresses = inp.get('addresses') or []
+                        for addr in inp_addresses:
+                            if addr == address:
+                                inputs_value += inp.get('output_value', 0)
+                                found_address = True
+                    
+                    # Check outputs
+                    for out in tx.get('outputs', []):
+                        out_addresses = out.get('addresses') or []
+                        for addr in out_addresses:
+                            if addr == address:
+                                outputs_value += out.get('value', 0)
+                                found_address = True
+                    
+                    # Skip transactions that don't involve this address
+                    if not found_address:
+                        continue
+                    
+                    # Determine transaction type and net change
+                    net_change = outputs_value - inputs_value
+                    tx_type = 'Received' if net_change > 0 else 'Sent'
+                    
+                    # Convert timestamp to readable date
+                    tx_time = 0
+                    tx_date = 'Unknown'
+                    if tx.get('received'):
+                        try:
+                            # BlockCypher returns ISO format datetime
+                            dt = datetime.fromisoformat(tx['received'].replace('Z', '+00:00'))
+                            tx_time = int(dt.timestamp())
+                            tx_date = dt.strftime('%Y-%m-%d %H:%M:%S')
+                        except Exception as date_error:
+                            print(f"DEBUG: Date parsing error: {date_error}")
+                            pass
+                    
+                    transactions.append({
+                        'hash': tx.get('hash', ''),
+                        'time': tx_time,
+                        'date': tx_date,
+                        'type': tx_type,
+                        'value_satoshis': abs(net_change),
+                        'value_btc': abs(net_change) / 100000000,
+                        'fee': tx.get('fees', 0),
+                        'size': tx.get('size', 0),
+                        'block_height': tx.get('block_height', 0),
+                        'inputs_count': len(tx.get('inputs', [])),
+                        'outputs_count': len(tx.get('outputs', [])),
+                        'confirmed': tx.get('block_height', 0) > 0
+                    })
+                    
+                except Exception as tx_error:
+                    print(f"DEBUG: Error processing BlockCypher transaction {i+1}: {tx_error}")
+                    traceback.print_exc()
+                    continue
+            
+            print(f"DEBUG: BlockCypher successfully processed {len(transactions)} transactions")
+            
+            return {
+                'success': True,
+                'address': address,
+                'address_info': {
+                    'hash160': '',  # BlockCypher doesn't provide hash160
+                    'n_tx': data.get('n_tx', 0),
+                    'n_unredeemed': data.get('unconfirmed_n_tx', 0),
+                    'total_received': data.get('total_received', 0) / 100000000,
+                    'total_sent': data.get('total_sent', 0) / 100000000,
+                    'final_balance': data.get('final_balance', 0) / 100000000
+                },
+                'transactions': transactions,
+                'pagination': {
+                    'limit': limit,
+                    'offset': offset,
+                    'total_transactions': data.get('n_tx', 0),
+                    'has_more': len(transactions) == limit
+                },
+                'api_source': 'BlockCypher'
+            }
+        else:
+            print(f"DEBUG: BlockCypher API error - Status: {response.status_code}")
+            return None
+            
+    except Exception as e:
+        print(f"DEBUG: BlockCypher API exception: {e}")
+        return None
+
+
+def get_address_transactions_detailed(request):
+    """API để lấy chi tiết giao dịch của một địa chỉ Bitcoin"""
+    
+    address = request.GET.get('address', '').strip()
+    limit = request.GET.get('limit', 50)
+    offset = request.GET.get('offset', 0)
+    
+    print(f"DEBUG: Processing request for address={address}, limit={limit}, offset={offset}")
+    
+    if not address:
+        return JsonResponse({
+            'success': False,
+            'error': 'Address parameter is required'
+        }, status=400)
+    
+    if not _is_valid_btc_address(address):
+        print(f"DEBUG: Invalid Bitcoin address: {address}")
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid Bitcoin address'
+        }, status=400)
+    
+    try:
+        # Validate limit and offset
+        limit = min(int(limit), 50)  # Max 50 as per API docs
+        offset = int(offset)
+        
+        # Try Blockchain.info API first
+        url = f"https://blockchain.info/rawaddr/{address}?limit={limit}&offset={offset}"
+        print(f"DEBUG: Calling Blockchain.info API URL: {url}")
+        
+        try:
+            response = requests.get(url, timeout=30)
+            print(f"DEBUG: Blockchain.info API response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                print(f"DEBUG: Blockchain.info received {len(data.get('txs', []))} transactions")
+                
+                # Process transaction data
+                transactions = []
+                for i, tx in enumerate(data.get('txs', [])):
+                    try:
+                        print(f"DEBUG: Processing Blockchain.info transaction {i+1}/{len(data.get('txs', []))}: {tx.get('hash', 'unknown')}")
+                        
+                        # Calculate input/output values for this address
+                        inputs_value = 0
+                        outputs_value = 0
+                        
+                        # Check inputs
+                        for inp in tx.get('inputs', []):
+                            prev_out = inp.get('prev_out', {})
+                            if prev_out.get('addr') == address:
+                                inputs_value += prev_out.get('value', 0)
+                        
+                        # Check outputs
+                        for out in tx.get('out', []):
+                            if out.get('addr') == address:
+                                outputs_value += out.get('value', 0)
+                        
+                        # Determine transaction type and net change
+                        net_change = outputs_value - inputs_value
+                        tx_type = 'Received' if net_change > 0 else 'Sent'
+                        
+                        # Convert timestamp to readable date - handle None/0 timestamps
+                        tx_time = tx.get('time', 0)
+                        if tx_time and tx_time > 0:
+                            tx_date = datetime.utcfromtimestamp(tx_time).strftime('%Y-%m-%d %H:%M:%S')
+                        else:
+                            tx_date = 'Unknown'
+                        
+                        transactions.append({
+                            'hash': tx.get('hash', ''),
+                            'time': tx_time,
+                            'date': tx_date,
+                            'type': tx_type,
+                            'value_satoshis': abs(net_change),
+                            'value_btc': abs(net_change) / 100000000,
+                            'fee': tx.get('fee', 0),
+                            'size': tx.get('size', 0),
+                            'block_height': tx.get('block_height', 0),
+                            'inputs_count': len(tx.get('inputs', [])),
+                            'outputs_count': len(tx.get('out', [])),
+                            'confirmed': tx.get('block_height', 0) > 0
+                        })
+                        
+                    except Exception as tx_error:
+                        print(f"DEBUG: Error processing Blockchain.info transaction {i+1}: {tx_error}")
+                        continue  # Skip this transaction and continue with others
+                
+                print(f"DEBUG: Blockchain.info successfully processed {len(transactions)} transactions")
+                
+                return JsonResponse({
+                    'success': True,
+                    'address': address,
+                    'address_info': {
+                        'hash160': data.get('hash160', ''),
+                        'n_tx': data.get('n_tx', 0),
+                        'n_unredeemed': data.get('n_unredeemed', 0),
+                        'total_received': data.get('total_received', 0) / 100000000,
+                        'total_sent': data.get('total_sent', 0) / 100000000,
+                        'final_balance': data.get('final_balance', 0) / 100000000
+                    },
+                    'transactions': transactions,
+                    'pagination': {
+                        'limit': limit,
+                        'offset': offset,
+                        'total_transactions': data.get('n_tx', 0),
+                        'has_more': len(transactions) == limit
+                    },
+                    'api_source': 'Blockchain.info'
+                })
+            else:
+                # Blockchain.info failed, try BlockCypher as fallback
+                print(f"DEBUG: Blockchain.info failed with status {response.status_code}, trying BlockCypher fallback...")
+                raise Exception(f"Blockchain.info API error: {response.status_code}")
+                
+        except Exception as blockchain_error:
+            print(f"DEBUG: Blockchain.info error: {blockchain_error}")
+            print(f"DEBUG: Trying BlockCypher API as fallback...")
+            
+            # Try BlockCypher API as fallback
+            blockcypher_result = _fetch_from_blockcypher(address, limit, offset)
+            
+            if blockcypher_result and blockcypher_result['success']:
+                print(f"DEBUG: BlockCypher fallback successful")
+                return JsonResponse(blockcypher_result)
+            else:
+                print(f"DEBUG: BlockCypher fallback also failed")
+                # Both APIs failed
+                if 'rate limit' in str(blockchain_error).lower() or '429' in str(blockchain_error):
+                    return JsonResponse({
+                        'success': False,
+                        'error': 'API rate limit exceeded. Please try again later.',
+                        'error_code': 'RATE_LIMIT'
+                    }, status=429)
+                elif '404' in str(blockchain_error):
+                    return JsonResponse({
+                        'success': False,
+                        'error': 'Address not found or has no transactions',
+                        'error_code': 'NOT_FOUND'
+                    }, status=404)
+                else:
+                    return JsonResponse({
+                        'success': False,
+                        'error': 'Both Blockchain.info and BlockCypher APIs failed. Please try again later.',
+                        'error_code': 'ALL_APIS_FAILED'
+                    }, status=503)
+            
+    except ValueError as ve:
+        print(f"DEBUG: ValueError: {ve}")
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid limit or offset parameter',
+            'error_code': 'INVALID_PARAMS'
+        }, status=400)
+        
+    except Exception as e:
+        print(f"DEBUG: Unexpected error in get_address_transactions_detailed: {e}")
+        traceback.print_exc()
+        return JsonResponse({
+            'success': False,
+            'error': 'An unexpected error occurred while fetching transaction data',
+            'error_code': 'UNEXPECTED_ERROR'
         }, status=500)

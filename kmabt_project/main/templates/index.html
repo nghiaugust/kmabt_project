@@ -4,10 +4,6 @@
 {% block title %}Home - KMABT{% endblock %}
 {% block content %}
 
-{% block styles %}
-<link rel="stylesheet" href="{% static 'css/analysis.css' %}">
-{% endblock %}
-
 <section class="main-header">
     <div class="header-grid">
         <div class="card-soft blue box box--topleft fade-in" id="check">
@@ -22,37 +18,66 @@
             </div>
         </div>
 
-        <div class="card-soft yellow right-top box fade-in">
-            <div id="logoContainer" class="d-flex justify-content-center align-items-center" style="min-height: 90px">
-                <img class="logo" src="{% static 'images/Logo KMABT.png' %}" alt="KMABT Logo" style="filter: brightness(0) invert(1)">
-            </div>
+    <div class="card-soft yellow right-top box fade-in">
+      <div
+        id="logoContainer"
+        class="d-flex justify-content-center align-items-center"
+        style="min-height: 90px"
+      >
+        <img
+          class="logo"
+          src="{% static 'images/Logo KMABT.png' %}"
+          alt="KMABT Logo"
+          style="filter: brightness(0) invert(1)"
+        />
+      </div>
 
-            <div id="analyticsResults" class="analytics-content-inline analytics-results" style="display: none;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div id="walletAddressInline" class="wallet-inline"></div>
-                    <button id="closeResultsBtn" class="close-btn" style="top: auto; right:auto; position: relative; z-index: 1000;">×</button>
-                </div>
-                <div id="analyticsDataInline">Loading...</div>
-                
-                <div id="txOverlay" class="tx-overlay" style="display:none;">
-                <div class="tx-overlay-content">
-                    <button id="closeOverlayBtn" class="close-btn">×</button>
-                    <div id="txOverlayBody">Loading...</div>
-                </div>
-                </div>
-            </div>
-
-            <div class="mt-3 d-flex gap-2">
-                <a id="graphLink" class="pill text-decoration-none flex-grow-1 text-center" href="{% url 'graph' %}">Tracer</a>
-                <a id="investigateLink" class="pill text-decoration-none flex-grow-1 text-center" href="{% url 'scams' %}">Investigator</a>
-            </div>
+      <div
+        id="analyticsResults"
+        class="analytics-content-inline analytics-results"
+        style="display: none"
+      >
+        <div class="d-flex justify-content-between align-items-center">
+          <div id="walletAddressInline" class="wallet-inline"></div>
+          <button
+            id="closeResultsBtn"
+            class="close-btn"
+            style="top: auto; right: auto; position: relative; z-index: 1000"
+          >
+            ×
+          </button>
         </div>
-    </div>
+        <div id="analyticsDataInline">Loading...</div>
 
-    <div class="scroll-indicator" id="scrollToggleBtn">
-        <div id="scrollText">Scroll Down</div>
-        <div id="scrollIcon">↓</div>
+        <div id="txOverlay" class="tx-overlay" style="display: none">
+          <div class="tx-overlay-content">
+            <button id="closeOverlayBtn" class="close-btn">×</button>
+            <div id="txOverlayBody">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3 d-flex gap-2">
+        <a
+          id="graphLink"
+          class="pill text-decoration-none flex-grow-1 text-center"
+          href="{% url 'graph' %}"
+          >Tracer</a
+        >
+        <a
+          id="investigateLink"
+          class="pill text-decoration-none flex-grow-1 text-center"
+          href="{% url 'scams' %}"
+          >Investigator</a
+        >
+      </div>
     </div>
+  </div>
+
+  <div class="scroll-indicator" id="scrollToggleBtn">
+    <div id="scrollText">Scroll Down</div>
+    <div id="scrollIcon">↓</div>
+  </div>
 </section>
 
 <section class="analysis-section" style="display: none;">
@@ -91,85 +116,100 @@
             </div>
         </div>
 
-        <div class="card-soft orange box fade-in" id="external-analysis">
-            <div class="heading" style="color: #ff9800">Third-party Report</div>
-            
-            <div id="report-content" class="analysis-content" style="display: none;">
-                <div class="report-grid-single">
-                    <div class="report-item">
-                        <div class="report-label">🗓️ Wallet Age</div>
-                        <div id="report-age" class="report-value">--</div>
-                    </div>
-                    <div class="report-item">
-                        <div class="report-label">📊 Total Transactions</div>
-                        <div id="report-tx-count" class="report-value">--</div>
-                    </div>
-                    <div class="report-item">
-                        <div class="report-label">📥 Total Received</div>
-                        <div id="report-total-received" class="report-value">--</div>
-                    </div>
-                    <div class="report-item">
-                        <div class="report-label">📤 Total Sent</div>
-                        <div id="report-total-sent" class="report-value">--</div>
-                    </div>
-                    <div class="report-item">
-                        <div class="report-label">💰 Final Balance</div>
-                        <div id="report-balance-btc" class="report-value">--</div>
-                    </div>
-                    <div class="report-item">
-                        <div class="report-label">💵 Estimated Value</div>
-                        <div id="report-balance-usd" class="report-value">--</div>
-                    </div>
-                </div>
-                <div class="text-center mt-3 mb-2">
-                    <button id="exportReportBtn" class="analysis-btn"  style="padding: 8px 15px; font-size: 0.9em; padding-bottom: 5px;";>Export Report (.csv)</button>
-                </div>
-                
-                <div class="report-footer">
-                    Data provided by 
+    <div class="card-soft orange box fade-in" id="external-analysis">
+      <div class="heading" style="color: #ff9800">Third-party Report</div>
+
+      <div id="report-content" class="analysis-content" style="display: none">
+        <div class="report-grid-single">
+          <div class="report-item">
+            <div class="report-label">🗓️ Wallet Age</div>
+            <div id="report-age" class="report-value">--</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">📊 Total Transactions</div>
+            <div id="report-tx-count" class="report-value">--</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">📥 Total Received</div>
+            <div id="report-total-received" class="report-value">--</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">📤 Total Sent</div>
+            <div id="report-total-sent" class="report-value">--</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">💰 Final Balance</div>
+            <div id="report-balance-btc" class="report-value">--</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">💵 Estimated Value</div>
+            <div id="report-balance-usd" class="report-value">--</div>
+          </div>
+        </div>
+        <div class="text-center mt-3 mb-2">
+          <button
+            id="exportReportBtn"
+            class="analysis-btn"
+            style="padding: 8px 15px; font-size: 0.9em; padding-bottom: 5px"
+            ;
+          >
+            Export Report (.csv)
+          </button>
+        </div>
+
+        <div class="report-footer">
+          Data provided by
                     <a href="https://www.blockchain.com/" target="_blank">Blockchain.com</a>, 
                     <a href="https://blockstream.info/" target="_blank">Blockstream.info</a> & 
                     <a href="https://www.coingecko.com/" target="_blank">CoinGecko</a>.
-                </div>
-            </div>
-
-            <div id="report-loading" class="analysis-loading" style="display: none; padding: 20px;">
-                <div class="loading-spinner"></div>
-                <div class="text-muted">Generating report...</div>
-            </div>
         </div>
+      </div>
+
+      <div
+        id="report-loading"
+        class="analysis-loading"
+        style="display: none; padding: 20px"
+      >
+        <div class="loading-spinner"></div>
+        <div class="text-muted">Generating report...</div>
+      </div>
     </div>
-    <div class="text-center hide-btn-wrapper">
-        <button id="hideAnalysisBtn" class="analysis-btn">Hide Analysis</button>
-    </div>
+  </div>
+  <div class="text-center hide-btn-wrapper">
+    <button id="hideAnalysisBtn" class="analysis-btn">Hide Analysis</button>
+  </div>
 </section>
 
 <section class="content-grid grid">
-    <div class="card-soft purple box box--bottomleft fade-in" id="transactions">
-        <div class="heading" style="color: rgba(150, 100, 255, 0.6)">Recent Transactions</div>
-        <div class="table-responsive mt-2" id="tx-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>TX Hash</th>
-                        <th>Amount</th>
-                        <th>USD</th>
-                        <th>Fee</th>
-                    </tr>
-                </thead>
-                <tbody id="tx-table">
-                    <tr>
-                        <td colspan="4" class="text-center text-muted">Loading...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+  <div class="card-soft purple box box--bottomleft fade-in" id="transactions">
+    <div class="heading" style="color: rgba(150, 100, 255, 0.6)">
+      Recent Transactions
     </div>
+    <div class="table-responsive mt-2" id="tx-container">
+      <table>
+        <thead>
+          <tr>
+            <th>TX Hash</th>
+            <th>Amount</th>
+            <th>USD</th>
+            <th>Fee</th>
+          </tr>
+        </thead>
+        <tbody id="tx-table">
+          <tr>
+            <td colspan="4" class="text-center text-muted">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    <div class="card-soft white box box--bottomright fade-in" id="chatbot">
-        <div class="heading" style="color: #e8dca7">Realtime Detection</div>
-        <div class="text-muted" style="color: #e8dca7 !important">Coming soon...</div>
+  <div class="card-soft white box box--bottomright fade-in" id="chatbot">
+    <div class="heading" style="color: #e8dca7">Realtime Detection</div>
+    <div class="text-muted" style="color: #e8dca7 !important">
+      Coming soon...
     </div>
+  </div>
 </section>
 
 {% block script %}
@@ -185,17 +225,17 @@
 <script src="{% static 'js/utils.js' %}"></script>
 {% endblock %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener("DOMContentLoaded", function () {
     // --- Lấy tham chiếu đến các thành phần HTML ---
-    const enterButton = document.querySelector('.enter-btn');
-    const checkInput = document.getElementById('checkInput');
-    const graphLink = document.getElementById('graphLink');
-    const investigateLink = document.getElementById('investigateLink');
-    const analyticsResults = document.getElementById('analyticsResults');
-    const logoContainer = document.getElementById('logoContainer');
-    const analysisSection = document.querySelector('.analysis-section');
-    const analysisBtn = document.querySelector('.analysis-btn');
-    const clearInputBtn = document.getElementById('clearInputBtn'); // THÊM MỚI: Lấy nút xóa
+    const enterButton = document.querySelector(".enter-btn");
+    const checkInput = document.getElementById("checkInput");
+    const graphLink = document.getElementById("graphLink");
+    const investigateLink = document.getElementById("investigateLink");
+    const analyticsResults = document.getElementById("analyticsResults");
+    const logoContainer = document.getElementById("logoContainer");
+    const analysisSection = document.querySelector(".analysis-section");
+    const analysisBtn = document.querySelector(".analysis-btn");
+    const clearInputBtn = document.getElementById("clearInputBtn"); // THÊM MỚI: Lấy nút xóa
 
     // --- Lưu lại văn bản gốc để reset ---
     const originalGraphText = graphLink.innerText;
@@ -203,29 +243,29 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // --- HÀM MỚI: Reset giao diện về trạng thái ban đầu ---
     function resetAnalysisView() {
-        if (analyticsResults) analyticsResults.style.display = 'none';
-        if (logoContainer) logoContainer.style.display = 'flex';
-        if (analysisSection) analysisSection.style.display = 'none';
-        if (analysisBtn) analysisBtn.style.display = 'none';
+      if (analyticsResults) analyticsResults.style.display = "none";
+      if (logoContainer) logoContainer.style.display = "flex";
+      if (analysisSection) analysisSection.style.display = "none";
+      if (analysisBtn) analysisBtn.style.display = "none";
     }
 
     // --- Hàm cập nhật trạng thái các nút (dành cho sự kiện 'input') ---
     function updateButtonState() {
-        const inputValue = checkInput.value.trim();
+      const inputValue = checkInput.value.trim();
 
-        graphLink.style.display = '';
-        investigateLink.style.display = '';
-        graphLink.innerText = originalGraphText;
-        investigateLink.innerText = originalInvestigateText;
-        
-        // THÊM MỚI: Hiển thị hoặc ẩn nút xóa
-        if (clearInputBtn) {
-            clearInputBtn.style.display = inputValue ? 'block' : 'none';
-        }
+      graphLink.style.display = "";
+      investigateLink.style.display = "";
+      graphLink.innerText = originalGraphText;
+      investigateLink.innerText = originalInvestigateText;
 
-        if (inputValue === '') {
-            return;
-        }
+      // THÊM MỚI: Hiển thị hoặc ẩn nút xóa
+      if (clearInputBtn) {
+        clearInputBtn.style.display = inputValue ? "block" : "none";
+      }
+
+      if (inputValue === "") {
+        return;
+      }
 
         if (Utils.isBtcAddress(inputValue)) {
             graphLink.innerText = 'Trace this Address';
@@ -244,31 +284,38 @@ document.addEventListener('DOMContentLoaded', function() {
         const inputValue = checkInput.value.trim();
         const isValid = Utils.isBtcAddress(inputValue) || Utils.isTxid(inputValue);
 
-        if (isValid) {
-            document.cookie = `bitcoinAddress=${encodeURIComponent(inputValue)}; path=/; max-age=86400`;
-        } else if (inputValue !== '') {
-            alert('Dữ liệu không hợp lệ. Vui lòng nhập một địa chỉ Bitcoin hoặc mã giao dịch hợp lệ.');
-        }
+      if (isValid) {
+        document.cookie = `bitcoinAddress=${encodeURIComponent(
+          inputValue
+        )}; path=/; max-age=86400`;
+      } else if (inputValue !== "") {
+        alert(
+          "Dữ liệu không hợp lệ. Vui lòng nhập một địa chỉ Bitcoin hoặc mã giao dịch hợp lệ."
+        );
+      }
     }
 
     // --- Gán sự kiện cho các thành phần ---
     if (checkInput) {
-        checkInput.addEventListener('input', function() {
-            resetAnalysisView();
-            updateButtonState();
-        });
+      checkInput.addEventListener("input", function () {
+        resetAnalysisView();
+        updateButtonState();
+      });
     }
     
     // THÊM MỚI: Gán sự kiện click cho nút xóa
     if (clearInputBtn) {
-        clearInputBtn.addEventListener('click', function() {
-            checkInput.value = '';      // Xóa nội dung trong input
-            resetAnalysisView();        // Reset lại giao diện
-            updateButtonState();        // Cập nhật lại trạng thái các nút
-            checkInput.focus();         // Tự động focus lại vào ô input
-        });
+      clearInputBtn.addEventListener("click", function () {
+        checkInput.value = ""; // Xóa nội dung trong input
+        resetAnalysisView(); // Reset lại giao diện
+        updateButtonState(); // Cập nhật lại trạng thái các nút
+        checkInput.focus(); // Tự động focus lại vào ô input
+      });
     }
-});
+  });
 </script>
+
+<!-- Transaction Export Service -->
+<script src="{% static 'js/transaction_export_service.js' %}"></script>
 
 {% endblock %}
