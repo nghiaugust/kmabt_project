@@ -61,7 +61,7 @@ pip install -r requirements.txt
  - Giải nén `bitcoin-tracer-main.rar` với Extract here
 
 ## **🎮 Sử dụng**
-Bật Docker và khởi động server Django:
+Bật Docker và khởi động server Django bằng Terminal:
 ```bash
 python manage.py run_all
 ```
@@ -71,6 +71,7 @@ Bây giờ bạn có thể truy cập ứng dụng web qua các đường dẫn 
 * **Trang chủ**: [localhost:8000](localhost:8000)
 * **Tài liệu sử dụng API**: [localhost:8005/docs](localhost:8005/docs)
 
+Log của dự án có thể được xem qua Terminal và Docker Desktop
 ## **👥 Đội ngũ phát triển**
 
 Dự án này được xây dựng và duy trì bởi nhóm **KMABT (KMA Blockchain Tracer)**.
