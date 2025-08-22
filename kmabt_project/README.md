@@ -58,11 +58,10 @@ pip install -r requirements.txt
 ```
 
 3. Giải nén folder thuật toán detect Coinjoin và Peeling Chain
- - Giải nén `bitcoin-tracer-main.rar`
+ - Giải nén `bitcoin-tracer-main.rar` với Extract here
 
 ## **🎮 Sử dụng**
-
-Khởi động server Django:
+Bật Docker và khởi động server Django:
 ```bash
 python manage.py run_all
 ```
