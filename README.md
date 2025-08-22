@@ -42,7 +42,6 @@ Dưới đây là mô tả ngắn về các thành phần chính trong thư mụ
 ### **Yêu cầu**
 * [Python 3.8+](https://www.python.org/downloads/)  
 * [pip](https://pip.pypa.io/en/stable/installation/) (thường được cài sẵn với Python)
-* **MySQL Server**: Đảm bảo MySQL Server đã được cài đặt và đang chạy trên hệ thống của bạn. Bạn có thể tải xuống từ trang chính thức của [MySQL](https://dev.mysql.com/downloads/)
 
 ### **Hướng dẫn Cài đặt**
 
@@ -51,12 +50,12 @@ Dưới đây là mô tả ngắn về các thành phần chính trong thư mụ
 git clone https://github.com/nghiaugust/kmabt_project.git
 cd kmabt_project
 ```
-2. Cài đặt các thư viện cần thiết trong project:  
+2. **Cài đặt các thư viện cần thiết trong project**:  
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Giải nén folder thuật toán detect Coinjoin và Peeling Chain
+3. **Giải nén folder thuật toán AI&ML detect Coinjoin và Peeling Chain**
  - Giải nén `bitcoin-tracer-main.rar` với Extract here
 
 ## **🎮 Sử dụng**
